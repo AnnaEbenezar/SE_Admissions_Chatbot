@@ -1,9 +1,11 @@
-process_user_input(UserInput, Verb, Noun) :-
+process_user_input(UserInput, MappedVerb, MappedNoun) :-
     downcase_atom(UserInput, LowerUserInput),
     remove_punctuation(LowerUserInput, CleanedInput),
     tokenize_sentence(CleanedInput, TokenizedInput),
     extract_verb(TokenizedInput, Verb),
-    extract_noun(TokenizedInput, Noun).
+    map_synonyms(Verb, MappedVerb),
+    extract_noun(TokenizedInput, Noun),
+    map_synonyms(Noun, MappedNoun).
 
 
 remove_punctuation(Input, Cleaned) :-
@@ -21,7 +23,7 @@ is_punctuation(Char) :-
 is_verb(Word) :-
     member(Word, ['know', 'apply', 'study', 'work', 'specialized', 'provide', 'enroll', 'tell', 'learn']).
 is_noun(Word) :-
-    member(Word, ['software', 'admission', 'requirement', 'curriculum', 'syllabus', 'track', 'program', 'exchange', 'dual', 'degree']).
+    member(Word, ['software', 'se', 'admission', 'requirement', 'curriculum', 'syllabus', 'track', 'program', 'exchange', 'dual', 'degree']).
 
 extract_verb([], '').  
 extract_verb([Token | Rest], Verb) :-
@@ -39,5 +41,18 @@ extract_noun([Token | Rest], Noun) :-
         extract_noun(Rest, Noun)
     ).
 
+map_synonyms(Word, MappedWord) :-
+    synonym(Word, MappedWord),  
+    !.  
+map_synonyms(Word, Word). 
+
+%synnonym
+synonym('tell', 'know').
+synonym('provide', 'know').
+synonym('learn', 'study').
+synonym('apply', 'enroll').
+
+synonym('se', 'software').
+synonym('syllabus', 'curriculum').
 
 

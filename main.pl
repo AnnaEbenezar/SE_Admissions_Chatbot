@@ -1,17 +1,14 @@
 % main.pl
+:- consult('process_input.pl').
+:- consult('intent_rule.pl').
 
-:- consult('user_input.pl').
-:- consult('rule_base.pl').
-:- consult('rule_interpreter.pl').
-:- consult('admissions_chatbot.pl').
-
-main :-
-    write('Welcome to the Admissions Chatbot!'), nl,
-    chatbot_loop.
-
-chatbot_loop :-
+chat :-
+    write('Welcome to SE chatbot'), nl,
     repeat,
-    write('> '),
-    read_line_to_string(user_input),
-    process_user_input(user_input),
-    user_input(end), !.
+    read_line_to_string(user_input, UserInput),
+    process_user_input(UserInput, Verb, Noun),
+    rule(Verb, Noun, Return),
+    %do some conversation rule
+    write(Return), nl.
+
+

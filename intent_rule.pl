@@ -10,15 +10,16 @@ rule(Terms, Intent) :-
     member(question(Q), Terms),
     find_nearest_noun(Terms, NearestNoun, question(Q)),
     check_noun(Terms, NearestNoun, ReplacedNoun),
-    Intent = [ask(Q), ReplacedNoun].
-
+    Intent = [ask(Q), ReplacedNoun], !.
 
 %rule 2 (+ 3)
 rule(Terms, Intent) :-
     member(verb(V), Terms),
     find_nearest_noun(Terms, NearestNoun, verb(V)),
     check_noun(Terms, NearestNoun, ReplacedNoun),
-    Intent = [ask(V), ReplacedNoun].
+    Intent = [ask(V), ReplacedNoun], !.
+%base case
+rule(_, [ask(unknown), noun(unknown)]).
 
 %helper function
 find_nearest_noun(Terms, noun(Noun), X) :-
@@ -32,7 +33,11 @@ find_nearest_noun_from_target([_ | Rest], Noun) :-
 check_noun(Terms, Noun, ReplacedNoun) :-
     append(_, [Noun | Rest], Terms),
     Rest = [FollowingWord | _],
-    (is_noun_or_preposition(FollowingWord)) -> find_nearest_noun(Rest, ReplacedNoun, FollowingWord);
+    (get_inside_parentheses(FollowingWord, Inside)),
+    (preposition(Inside)),
+    find_nearest_noun(Rest, ReplacedNoun, FollowingWord);
     ReplacedNoun = Noun.
-    
-is_noun_or_preposition(Word) :- is_noun(Word) ; is_preposition(Word).
+
+get_inside_parentheses(Term, Inside) :-
+    Term =.. [Functor, Inside],
+    Inside \= (_, _). 

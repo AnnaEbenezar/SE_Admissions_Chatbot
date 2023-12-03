@@ -1,25 +1,50 @@
-%[ask(what), noun(se)] -> what is software engineering
-%[ask(where), noun(kmitl)] -> a location
-%[ask(why), noun(se)] -> why enroll in software engineering
-%[ask(what), noun(jobs)] -> jobs after graduation
-------
-%[ask(what), noun(admission)] -> generate all documents
-%[ask(what), noun(tests)] -> all the accepted test
+:- discontiguous ask/1.
+:- discontiguous rule_ai_subjects/2.
+:- discontiguous rule_ai_subjects/2.
+:- discontiguous subject/3.
 
-%[ask(score), noun(ielts)].... (all the test) -> tell mimimum score
-%[ask(what), noun(syllabus)] -> generate all the require subject
-%[ask(what), noun(track)] -> generate subject for all tracks
-%[ask(what), noun(ai)] -> generate subject for ai
-%[ask(what), noun(iot)] -> generate subject for iot
-%[ask(what), noun(metaverse)] -> generate subject for metaverse
+%admission
+ask(what).
+rule_admission([ask(what), noun(admission)], Return) :-
+    findall(X, admission_doc(X), Return).
 
-%[ask(unknown), noun(unknown)] -> we don't have info, i'm not the question
+%Tests
+ask(what).
+rule_tests([ask(what), noun(tests)], Return) :-
+    findall(X, admission_test(_, X, _, _, _), Return).
 
+%English Tests
+rule_engtests([ask(what), noun(eng)], Return) :-
+    findall(X, english_test(_, X, _, _), Return).
 
-precess_intent(Intent, Return) :-
-    
+%MinScores
+rule_min_scores([ask(what), noun(minimum), noun(score), noun(Test)], MinScore) :-
+    admission_test(_, Test, _, MinScore, _).
+rule_min_scores([ask(what), noun(minimum), noun(score), noun(eng), noun(Test)], MinScore) :-
+    english_test(_, Test, _, MinScore).
 
+%RequiredSubjects
+rule_required_subjects([ask(what), noun(syllabus)], Return) :-
+    findall([X, Y], subject(X, Y, require), Return).
 
+%AISubjects
+rule_ai_subjects([ask(what), noun(ai)], Return) :-
+    findall(X, subject(X, _, 'Artificial Intelligence'), Return).
+
+%IoTSubjects
+rule_iot_subjects([ask(what), noun(iot)], Return) :-
+    findall(X, subject(X, _, 'Industrial IoT'), Return).
+
+%MetaverseSubjects
+rule_metaverse_subjects([ask(what), noun(metaverse)], Return) :-
+    findall(X, subject(X, _, 'Metaverse'), Return).
+
+%AllSubjects
+rule_all_subjects(Return) :-
+    findall([X, Y], subject(X, Y, _), Return).
+
+rule(_, _, Return) :-
+    Return = 'Unknown'.
 
 % Facts 
 subject('Introduction to Calculus', year(1, 1), require).
@@ -87,10 +112,12 @@ subject('Professional Skills and Issues', year(4, 2), require).
 admission_test('sat', 'SAT', 'Scholastic Assessment Test', '1020', '600').
 admission_test('act', 'ACT', 'American College Testing', '19', '23').
 admission_test('ib', 'IB', 'International Baccalaureate', '29', '5').
-admission_test('ielts', 'IELTS', 'International English Language Testing System', '6', _).
-admission_test('toefl', 'TOEFL', 'Test of English as a Foreign Language', '550', _).
-admission_test('kmitl tep', 'KMITL TEP', 'KMITL Test of English Proficiency', 'B2', _).
-admission_test('ged', 'GED', 'General Educational Development', 'pass', _).
+admission_test('ged', 'GED', 'General Educational Development', 'pass', 'pass').
+
+english_test('ielts', 'IELTS', 'International English Language Testing System', '6').
+english_test('toefl', 'TOEFL', 'Test of English as a Foreign Language', '550').
+english_test('kmitl tep', 'KMITL TEP', 'KMITL Test of English Proficiency', 'B2').
+
 
 admission_doc('Application form').
 admission_doc('Photocopy of national id card or passport').

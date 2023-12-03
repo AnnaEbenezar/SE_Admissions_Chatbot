@@ -17,7 +17,7 @@ chat_loop :-
 process(Statement) :-
     (Statement == 'bye');
     process_user_input(Statement, Terms),
-    rule_intent(Terms, Intent, Group),
+    rule_intent(Terms, _, Group),
     rule_response(Group, Return),
     print_list(Return), nl.
 

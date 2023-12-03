@@ -3,6 +3,7 @@
 :- discontiguous subject/3.
 :- discontiguous rule_response/2.
 :- discontiguous acquire_subject/1.
+:- discontiguous acquire_what/1.
 
 
 rule_response(acquire_what(se), Return) :- findall(X, what_se(X), Return).

@@ -4,17 +4,17 @@
 :- discontiguous subject/3.
 
 %admission
-ask(what).
-rule_admission([ask(what), noun(admission)], Return) :-
+acquire_process(admission).
+rule_response(acquire_process(admission), Return) :-
     findall(X, admission_doc(X), Return).
 
 %Tests
-ask(what).
-rule_tests([ask(what), noun(tests)], Return) :-
+acquire_validity(test_name).
+rule_response(acquire_validity(test_name), Return) :-
     findall(X, admission_test(_, X, _, _, _), Return).
 
 %English Tests
-rule_engtests([ask(what), noun(eng)], Return) :-
+rule_response([ask(what), noun(eng)], Return) :-
     findall(X, english_test(_, X, _, _), Return).
 
 %MinScores
@@ -24,27 +24,29 @@ rule_min_scores([ask(what), noun(minimum), noun(score), noun(eng), noun(Test)], 
     english_test(_, Test, _, MinScore).
 
 %RequiredSubjects
-rule_required_subjects([ask(what), noun(syllabus)], Return) :-
+acquire_what(syllabus).
+rule_response(acquire_what(syllabus), Return) :-
     findall([X, Y], subject(X, Y, require), Return).
 
 %AISubjects
-rule_ai_subjects([ask(what), noun(ai)], Return) :-
+acquire_subject(ai).
+rule_response(acquire_subject(ai), Return) :-
     findall(X, subject(X, _, 'Artificial Intelligence'), Return).
 
 %IoTSubjects
-rule_iot_subjects([ask(what), noun(iot)], Return) :-
+acquire_subject(iot).
+rule_response(acquire_subject(iot), Return) :-
     findall(X, subject(X, _, 'Industrial IoT'), Return).
 
 %MetaverseSubjects
-rule_metaverse_subjects([ask(what), noun(metaverse)], Return) :-
+acquire_subject(metaverse).
+rule_response(acquire_subject(metaverse), Return) :-
     findall(X, subject(X, _, 'Metaverse'), Return).
 
 %AllSubjects
-rule_all_subjects(Return) :-
+rule_response(Return) :-
     findall([X, Y], subject(X, Y, _), Return).
 
-rule(_, _, Return) :-
-    Return = 'Unknown'.
 
 % Facts 
 subject('Introduction to Calculus', year(1, 1), require).

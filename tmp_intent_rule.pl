@@ -10,9 +10,10 @@ rule(Terms, Intent, GroupIntent) :-
     member(question(Q), Terms),
     find_nearest_noun(Terms, NearestNoun, question(Q)),
     check_noun(Terms, NearestNoun, ReplacedNoun),
-    Intent = [ask(Q), ReplacedNoun], !,
+    Intent = [ask(Q), ReplacedNoun], 
+    get_inside_parentheses(ReplacedNoun, NounNew),
     synonym_map(V, VerbMap),
-    synonym_map(N, NounMap),
+    synonym_map(NounNew, NounMap),
     intent_rule([ask(VerbMap), noun(NounMap)], GroupIntent), !.
 
 %rule 2 (+ 3)
@@ -20,9 +21,12 @@ rule(Terms, Intent, GroupIntent) :-
     member(verb(V), Terms),
     find_nearest_noun(Terms, NearestNoun, verb(V)),
     check_noun(Terms, NearestNoun, ReplacedNoun),
-    Intent = [ask(V), ReplacedNoun], !,
+    Intent = [ask(V), ReplacedNoun], 
+    get_inside_parentheses(ReplacedNoun, NounNew),
     synonym_map(V, VerbMap),
-    synonym_map(N, NounMap),
+    synonym_map(NounNew, NounMap),
+    write(VerbMap),
+    write(NounMap),
     intent_rule([ask(VerbMap), noun(NounMap)], GroupIntent), !.
 
 %base case
@@ -65,8 +69,6 @@ intent_rule([_, noun(track)], acquire_subject(all_track)).
 intent_rule([_, noun(ai)], acquire_subject(ai)).
 intent_rule([_, noun(iot)], acquire_subject(iot)).
 intent_rule([_, noun(metaverse)], acquire_subject(metaverse)).
-
-intent_rule([_, _], unknown).
 
 synonym_map(software, se).
 synonym_map(program, se).

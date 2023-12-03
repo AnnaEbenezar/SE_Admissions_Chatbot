@@ -11,10 +11,7 @@ rule(Terms, Intent, GroupIntent) :-
     find_nearest_noun(Terms, NearestNoun, question(Q)),
     check_noun(Terms, NearestNoun, ReplacedNoun),
     Intent = [ask(Q), ReplacedNoun], 
-    get_inside_parentheses(ReplacedNoun, NounNew),
-    synonym_map(V, VerbMap),
-    synonym_map(NounNew, NounMap),
-    intent_rule([ask(VerbMap), noun(NounMap)], GroupIntent), !.
+    get_group_intent(ReplacedNoun, GroupIntent).
 
 %rule 2 (+ 3)
 rule(Terms, Intent, GroupIntent) :-
@@ -22,17 +19,20 @@ rule(Terms, Intent, GroupIntent) :-
     find_nearest_noun(Terms, NearestNoun, verb(V)),
     check_noun(Terms, NearestNoun, ReplacedNoun),
     Intent = [ask(V), ReplacedNoun], 
-    get_inside_parentheses(ReplacedNoun, NounNew),
-    synonym_map(V, VerbMap),
-    synonym_map(NounNew, NounMap),
-    write(VerbMap),
-    write(NounMap),
-    intent_rule([ask(VerbMap), noun(NounMap)], GroupIntent), !.
+    get_group_intent(ReplacedNoun, GroupIntent).
 
 %base case
 rule(_, [ask(unknown), noun(unknown)]).
 
 %helper function
+get_group_intent(ReplacedNoun, GroupIntent) :-
+    get_inside_parentheses(ReplacedNoun, NounNew),
+    synonym_map(V, VerbMap), !,
+    synonym_map(NounNew, NounMap), !,
+    intent_rule([ask(VerbMap), noun(NounMap)], GroupIntent), !.
+
+get_group_intent(_, unknown).
+
 find_nearest_noun(Terms, noun(Noun), X) :-
     append(_, [X | Rest], Terms),  
     find_nearest_noun_from_target(Rest, Noun).

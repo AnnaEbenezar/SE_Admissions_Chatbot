@@ -67,6 +67,7 @@ intent_rule([_, noun(track)], acquire_subject(all_track)).
 intent_rule([_, noun(ai)], acquire_subject(ai)).
 intent_rule([_, noun(iot)], acquire_subject(iot)).
 intent_rule([_, noun(metaverse)], acquire_subject(metaverse)).
+
 intent_rule(_, unknown).
 
 synonym_map(software, se).

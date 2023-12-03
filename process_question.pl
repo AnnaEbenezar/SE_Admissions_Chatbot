@@ -4,47 +4,54 @@
 :- discontiguous rule_response/2.
 :- discontiguous acquire_subject/1.
 
-%admission
-acquire_process(admission).
-rule_response(acquire_process(admission), Return) :-
-    findall(X, admission_doc(X), Return).
 
-%Tests
-acquire_validity(test).
-rule_response(acquire_validity(test), Return) :-
-    findall(X, admission_test(_, X, _, _, _), Return).
+rule_response(acquire_what(se), Return) :- findall(X, what_se(X), Return).
 
+rule_response(acquire_why(se), Return) :- findall(X, reason(X), Return).
 
-%English Tests
-acquire_test(eng).
-rule_response(acquire_test(eng), Return) :-
-    findall(X, english_test(_, X, _, _), Return).
+rule_response(acquire_location(kmitl), Return) :- findall(X, location(X) , Return).
 
-%RequiredSubjects
-acquire_what(syllabus).
-rule_response(acquire_what(syllabus), Return) :-
-    findall([X, Y], subject(X, Y, require), Return).
+rule_response(acquire_process(admission), Return) :- findall(X, admission_doc(X), Return).
 
-%AISubjects
-acquire_subject(ai).
-rule_response(acquire_subject(ai), Return) :-
-    findall(X, subject(X, _, 'Artificial Intelligence'), Return).
+rule_response(acquire_validity(test), Return) :- findall(X, admission_test(_, X, _, _, _), Return).
 
-%IoTSubjects
-acquire_subject(iot).
-rule_response(acquire_subject(iot), Return) :-
-    findall(X, subject(X, _, 'Industrial IoT'), Return).
+rule_response(acquire_jobs(se), Return) :- findall(X, career(X), Return).
 
-%MetaverseSubjects
-acquire_subject(metaverse).
-rule_response(acquire_subject(metaverse), Return) :-
-    findall(X, subject(X, _, 'Metaverse'), Return).
+rule_response(acquire_test(eng), Return) :- findall(X, english_test(_, X, _, _), Return).
 
-rule_response(unknown, Return) :-
-    Return = ['Sorry, I don\'t understand you'].
+rule_response(acquire_what(syllabus), Return) :- findall([X, Y], subject(X, Y, require), Return).
 
+rule_response(acquire_subject(ai), Return) :- findall(X, subject(X, _, 'Artificial Intelligence'), Return).
+
+rule_response(acquire_subject(iot), Return) :- findall(X, subject(X, _, 'Industrial IoT'), Return).
+
+rule_response(acquire_subject(metaverse), Return) :- findall(X, subject(X, _, 'Metaverse'), Return).
+
+rule_response(quit, Return) :- Return = ['Good bye'].
+
+rule_response(unknown, Return) :- Return = ['Sorry, I don\'t understand you'].
 
 % Facts 
+%valid intent
+acquire_what(se).
+acquire_why(se).
+acquire_location(kmitl).
+acquire_process(admission).
+acquire_validity(test).
+acquire_jobs(se).
+acquire_test(eng).
+acquire_what(syllabus).
+acquire_subject(ai).
+acquire_subject(iot).
+acquire_subject(metaverse).
+
+what_se('Software engineering (SE) is an engineering discipline concerning all aspects of software production, including software analysis, design, development, testing, and deployment.').
+
+reason('High Demand of Software Engineers').
+reason('To apply ubiquitous software').
+reason('To develop real-world software applications').
+reason('To be efficient in software development').
+
 subject('Introduction to Calculus', year(1, 1), require).
 subject('Circuits and Electronics', year(1, 1), require).
 subject('Elementary Systems Programming', year(1, 1), require).
@@ -116,7 +123,6 @@ english_test('ielts', 'IELTS', 'International English Language Testing System', 
 english_test('toefl', 'TOEFL', 'Test of English as a Foreign Language', '550').
 english_test('kmitl tep', 'KMITL TEP', 'KMITL Test of English Proficiency', 'B2').
 
-
 admission_doc('Application form').
 admission_doc('Photocopy of national id card or passport').
 admission_doc('Academic records documents').
@@ -124,3 +130,14 @@ admission_doc('English Proficiency').
 admission_doc('Reccommendation letters').
 admission_doc('Personal Statement').
 admission_doc('Portfolio').
+
+career('Software Engineers').
+career('SOftware Developers').
+career('Software Architects').
+career('Analysts and Designers of IT systems').
+career('Software Entrepreneurs').
+career('IT Consultants').
+career('Data Engineers').
+career('or Further pursue at postgraduate or doctorate level').
+
+location('1 Chalong Krung 1 Alley, Lat Krabang, Bangkok 10520, Thailand.').

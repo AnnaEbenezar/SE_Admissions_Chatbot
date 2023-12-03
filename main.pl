@@ -10,10 +10,12 @@ chat :-
 chat_loop :-
     write('How can I assist you today?'), nl,
     read_line_to_string(user_input, UserInput),
-    process(UserInput),
-    (UserInput \= 'bye' -> chat_loop; write('Goodbye'), nl).
+    atom_string(AtomInput, UserInput),
+    process(AtomInput),
+    (AtomInput \= 'bye' -> chat_loop; write('Goodbye'), nl).
 
 process(Statement) :-
+    (Statement == 'bye');
     process_user_input(Statement, Terms),
     rule_intent(Terms, Intent, Group),
     rule_response(Group, Return),

@@ -41,7 +41,6 @@ extract_terms([Token | Rest], [Term | RestTerms]) :-
     ),
     extract_terms(Rest, RestTerms).
 
-
 is_subject(Token) :-
     subject(Token).
 is_verb(Token) :-
@@ -114,6 +113,8 @@ verb('provide').
 verb('would').
 verb('like').
 verb('valid').
+verb('ask').
+verb('bye').
 
 noun('software').
 noun('engineering').
@@ -150,3 +151,6 @@ noun('eng').
 noun('tests').
 noun('test').
 noun('english').
+noun('uni').
+noun('university').
+noun('kmitl').

@@ -86,7 +86,6 @@ preposition('of').
 preposition('about').
 preposition('related').
 
-
 conjunction('and').
 conjunction('or').
 conjunction('but').
@@ -110,20 +109,11 @@ verb('enroll').
 verb('tell').
 verb('prepare').
 verb('register').
-verb('is').
-verb('am').
-verb('are').
-verb('was').
-verb('were').
-verb('shall').
-verb('will').
-verb('has').
-verb('have').
-verb('had').
 verb('want').
 verb('provide').
 verb('would').
 verb('like').
+verb('valid').
 
 noun('software').
 noun('engineering').
@@ -145,5 +135,19 @@ noun('jobs').
 noun('details').
 noun('information').
 noun('info').
+noun('kmitl').
 noun('process').
 noun('procedure').
+noun('ai').
+noun('iot').
+noun('metaverse').
+noun('sat').
+noun('act').
+noun('ib').
+noun('ged').
+noun('ielts').
+noun('toefl').
+noun('eng').
+noun('tests').
+noun('test').
+noun('english').

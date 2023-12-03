@@ -1,7 +1,8 @@
 :- discontiguous ask/1.
 :- discontiguous rule_ai_subjects/2.
-:- discontiguous rule_ai_subjects/2.
 :- discontiguous subject/3.
+:- discontiguous rule_response/2.
+:- discontiguous acquire_subject/1.
 
 %admission
 acquire_process(admission).
@@ -9,19 +10,24 @@ rule_response(acquire_process(admission), Return) :-
     findall(X, admission_doc(X), Return).
 
 %Tests
-acquire_validity(test_name).
-rule_response(acquire_validity(test_name), Return) :-
+acquire_validity(test).
+rule_response(acquire_validity(test), Return) :-
     findall(X, admission_test(_, X, _, _, _), Return).
 
-%English Tests
-rule_response([ask(what), noun(eng)], Return) :-
-    findall(X, english_test(_, X, _, _), Return).
+%location
+acquire_location(kmitl).
+rule_response(acquire_location(kmitl), Return) :-
+    findall(X, location(X) , Return).
 
-%MinScores
-rule_min_scores([ask(what), noun(minimum), noun(score), noun(Test)], MinScore) :-
-    admission_test(_, Test, _, MinScore, _).
-rule_min_scores([ask(what), noun(minimum), noun(score), noun(eng), noun(Test)], MinScore) :-
-    english_test(_, Test, _, MinScore).
+%whySE
+acquire_why(se).
+rule_response(acquire_why(se), Return) :-
+    findall(X, reason(X), Return).
+
+%English Tests
+acquire_test(eng).
+rule_response(acquire_test(eng), Return) :-
+    findall(X, english_test(_, X, _, _), Return).
 
 %RequiredSubjects
 acquire_what(syllabus).
@@ -43,9 +49,13 @@ acquire_subject(metaverse).
 rule_response(acquire_subject(metaverse), Return) :-
     findall(X, subject(X, _, 'Metaverse'), Return).
 
-%AllSubjects
-rule_response(Return) :-
-    findall([X, Y], subject(X, Y, _), Return).
+%career
+acquire_jobs(se).
+rule_response(acquire_jobs(se), Return) :-
+    findall(X, career(X), Return).
+
+rule_response(unknown, Return) :-
+    Return = ['Sorry, I don\'t understand you'].
 
 
 % Facts 
@@ -128,3 +138,19 @@ admission_doc('English Proficiency').
 admission_doc('Reccommendation letters').
 admission_doc('Personal Statement').
 admission_doc('Portfolio').
+
+career('Software Engineers').
+career('SOftware Developers').
+career('Software Architects').
+career('Analysts and Designers of IT systems').
+career('Software Entrepreneurs').
+career('IT Consultants').
+career('Data Engineers').
+career('or Further pursue at postgraduate or doctorate level').
+
+reason('High Demand of Software Engineers').
+reason('To apply ubiquitous software').
+reason('To develop real-world software applications').
+reason('To be efficient in software development').
+
+location('1 Chalong Krung 1 Alley, Lat Krabang, Bangkok 10520, Thailand.').

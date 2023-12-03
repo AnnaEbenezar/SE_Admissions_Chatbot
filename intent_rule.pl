@@ -1,4 +1,4 @@
-
+:- discontiguous intent_rule/2.
 %identify intent rule, we priorities the rule from top to bottom
 %rule 1: if there are wh-question in the text user input, then find the nearest noun and generate the intent
 %rule 2: if there no wh-question, we going to detect the verb, and the nearest noun the that verb and generate intent
@@ -6,32 +6,29 @@
 
 %rule 1 (+ 3)
 rule_intent(Terms, Intent, GroupIntent) :-
-    write('Rule1'), nl,
     member(question(Q), Terms),
     find_nearest_noun(Terms, NearestNoun, question(Q)),
     check_noun(Terms, NearestNoun, ReplacedNoun),
     Intent = [ask(Q), ReplacedNoun], 
-    get_group(ReplacedNoun, GroupIntent). 
+    get_group(Q, ReplacedNoun, GroupIntent), !.
 
-%rule 2(+3)
+%rule 2 (+3)
 rule_intent(Terms, Intent, GroupIntent) :- 
-    write('Rule2'), nl,
     member(verb(V), Terms),
     find_nearest_noun(Terms, NearestNoun, verb(V)),
     check_noun(Terms, NearestNoun, ReplacedNoun),
     Intent = [ask(V), ReplacedNoun],  
-    get_group(ReplacedNoun, GroupIntent).
+    get_group(V, ReplacedNoun, GroupIntent), !.
 
-rule_intent(_, _, _) :-
-    write('base'), nl.
+rule_intent(_, unknown, unknown).
 
-
-get_group(ReplacedNoun, GroupIntent) :-
+get_group(V, ReplacedNoun, GroupIntent) :-
     get_inside_parentheses(ReplacedNoun, NounNew),
     synonym_map(V, VerbMap),
     synonym_map(NounNew, NounMap),
     intent_rule([ask(VerbMap), noun(NounMap)], GroupIntent).
 
+get_group(_, _, unknown).
 
 find_nearest_noun(Terms, noun(Noun), X) :-
     append(_, [X | Rest], Terms),  
@@ -50,18 +47,19 @@ check_noun(Terms, Noun, ReplacedNoun) :-
     ReplacedNoun = Noun.
 
 get_inside_parentheses(Term, Inside) :-
-    Term =.. [Functor, Inside],
+    Term =.. [_, Inside],
     Inside \= (_, _). 
     
 %group intent
 intent_rule([ask(what), noun(se)], acquire_what(se)).
 intent_rule([ask(why), noun(se)], acquire_why(se)).
-intent_rule(_, noun(jobs), acquire_jobs(se)).
+intent_rule([_, noun(jobs)], acquire_jobs(se)).
 intent_rule([ask(where), noun(kmitl)], acquire_location(kmitl)).
 
 intent_rule([_, noun(admission)], acquire_process(admission)).
 intent_rule([ask(apply), _], acquire_process(admission)).
-intent_rule([ask(valid), _], acquire_validity(test_name)).
+intent_rule([_, noun(tests)], acquire_validity(test)).
+intent_rule([_, noun(english)], acquire_test(eng)).
 
 intent_rule([_, noun(syllabus)], acquire_what(syllabus)).
 intent_rule([ask(study), _], acquire_what(syllabus)).
@@ -69,6 +67,8 @@ intent_rule([_, noun(track)], acquire_subject(all_track)).
 intent_rule([_, noun(ai)], acquire_subject(ai)).
 intent_rule([_, noun(iot)], acquire_subject(iot)).
 intent_rule([_, noun(metaverse)], acquire_subject(metaverse)).
+
+intent_rule(_, unknown).
 
 synonym_map(software, se).
 synonym_map(program, se).
@@ -99,5 +99,6 @@ synonym_map(subject, syllabus).
 synonym_map(know, what).
 synonym_map(provide, what).
 synonym_map(tell, what).
+synonym_map(ask, what).
 
 synonym_map(X, X).
